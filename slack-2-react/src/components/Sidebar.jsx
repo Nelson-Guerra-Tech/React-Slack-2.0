@@ -16,12 +16,26 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 
+// firebase imports
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { db, auth } from '../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
 export default function Sidebar() {
+  const [channels, loading, error] = useCollection(db.collection('rooms'));
+  const [user] = useAuthState(auth);
+
   return (
     <SidebarContainer>
       <SidebarHeader>
         <SidebarInfo>
-          <h2>Andromeda HQ</h2>
+          <h2>
+            <img
+              src='https://cdn.icon-icons.com/icons2/1532/PNG/512/3285297-andromeda-astronomy-cosmos-galaxy-space-spiral-universe_106791.png'
+              alt='slack-logo'
+            />
+            <p>Andromeda</p>
+          </h2>
           <h3>
             <FiberManualRecordIcon />
             Nelson Guerra
@@ -42,6 +56,11 @@ export default function Sidebar() {
       <SidebarOptions Icon={ExpandMoreIcon} title='Channels' />
       <hr />
       <SidebarOptions Icon={AddIcon} addChannelOption title='Add Channel' />
+
+      {/* add channels to the sidebar */}
+      {channels?.docs.map((doc) => (
+        <SidebarOptions key={doc.id} id={doc.id} title={doc.data().name} />
+      ))}
     </SidebarContainer>
   );
 }
@@ -53,6 +72,7 @@ const SidebarContainer = styled.div`
   border-top: 1px solid #49274b;
   max-width: 260px;
   margin-top: 60px;
+  overflow-y: scroll;
 
   > hr {
     margin: 10px 0;
@@ -81,6 +101,16 @@ const SidebarInfo = styled.div`
     font-size: 1rem;
     font-weight: 900;
     margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+  }
+
+  > h2 > p {
+    margin-left: 5px;
+  }
+
+  > h2 > img {
+    height: 25px;
   }
 
   > h3 {
