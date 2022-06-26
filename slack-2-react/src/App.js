@@ -6,7 +6,9 @@ import {
   Switch,
   Link,
 } from 'react-router-dom';
+import styled from 'styled-components';
 import Header from './components/Header';
+import Sidebar from './components/Sidebar';
 
 // CSS
 import './App.css';
@@ -16,11 +18,15 @@ function App() {
     <div className='app'>
       <Router>
         <>
-          <Switch>
-            <Route path='/' exact>
-              <Header />
-            </Route>
-          </Switch>
+          <Header />
+          <AppBody>
+            <Sidebar />
+            <Switch>
+              <Route path='/' exact>
+                {/* chat component */}
+              </Route>
+            </Switch>
+          </AppBody>
         </>
       </Router>
     </div>
@@ -28,3 +34,9 @@ function App() {
 }
 
 export default App;
+
+// styled components
+const AppBody = styled.div`
+  display: flex;
+  height: 100vh;
+`;
